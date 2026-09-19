@@ -44,8 +44,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
         items: [
           _buildButtonNavigationItem(title: 'Quran', icon: AppImage.icHadeth),
           _buildButtonNavigationItem(title: 'Hadeth', icon: AppImage.icQuran),
-          _buildButtonNavigationItem(title: 'Radio', icon: AppImage.icRadio),
           _buildButtonNavigationItem(title: 'Sebha', icon: AppImage.icSebha),
+          _buildButtonNavigationItem(title: 'Radio', icon: AppImage.icRadio),
           _buildButtonNavigationItem(title: 'Time', icon: AppImage.icTime),
         ],
       ),

@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:islami/core/theme/app_colors.dart';
 
 abstract class AppText {
+  static const s36wB = TextStyle(
+    fontSize: 36,
+    fontWeight: .bold,
+    color: AppColors.white,
+  );
   static const s24wB = TextStyle(
     fontSize: 24,
     fontWeight: .bold,
