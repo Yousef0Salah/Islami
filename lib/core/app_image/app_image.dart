@@ -27,8 +27,8 @@ abstract class AppImage {
   static const String icTime = 'assets/icons/ic_time.svg';
   static const String icSebha = 'assets/icons/ic_sebha.svg';
   static const String icRadio = 'assets/icons/ic_radio.svg';
-  static const String icHadeth = 'assets/icons/ic_quran.svg';
-  static const String icQuran = 'assets/icons/ic_hadeth.svg';
+  static const String icHadeth = 'assets/icons/ic_hadeth.svg';
+  static const String icQuran = 'assets/icons/ic_quran.svg';
   // static const String = '';
   // static const String = '';
   // static const String = '';
