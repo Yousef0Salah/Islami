@@ -18,6 +18,7 @@ abstract class AppImage {
   static const String introQuran = 'assets/images/intro_quran.png';
   static const String introWelcome = 'assets/images/intro_welcome.png';
   static const String introRadio = 'assets/images/intro_radio.png';
+  static const String mostRecent = 'assets/images/most_recent.png';
 
   //-------------logo----------------
   static const String appLogo = 'assets/logo/app_logo.png';

@@ -4,6 +4,7 @@ import 'package:islami/core/theme/app_colors.dart';
 import 'package:islami/core/theme/app_text.dart';
 import 'package:islami/modules/intro_screen/intro_page_model.dart';
 import 'package:islami/modules/layout/screens/layout_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({super.key});
@@ -138,8 +139,10 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
                   }),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: ()async {
                     if (_currentPageIndex == listIntro.length - 1) {
+                     await  _finshIntro();
+                       if (!mounted) return;
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => LayoutScreen()),
@@ -165,5 +168,11 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> _finshIntro() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenIntro', true);
+   
   }
 }
