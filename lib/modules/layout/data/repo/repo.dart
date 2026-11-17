@@ -1,0 +1,58 @@
+import 'dart:convert';
+
+import 'package:islami/modules/layout/data/model/radio_model.dart';
+import 'package:islami/modules/layout/data/data_source/remote_data_source.dart';
+import 'package:islami/modules/layout/data/model/reciters_model.dart';
+import 'package:islami/modules/layout/data/model/time_model.dart';
+
+abstract class Repo {
+  Future<List<RadioModel>> getRadio();
+
+  Future<List<ReciterModel>> getReciter();
+
+  Future<TimeData> getTime();
+}
+
+class RepoImp implements Repo {
+  RemoteDataSource remoteDataSource = RemoteDataSourceImp();
+  @override
+  Future<List<RadioModel>> getRadio() async {
+    try {
+      var response = await remoteDataSource.getRadio();
+      var data = ResponseRadio.fromJson(response.toString());
+      return data.radios;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ReciterModel>> getReciter() async {
+    try {
+      var response = await remoteDataSource.getReciters();
+      var data = ResponseReciters.fromJson(response.toString());
+      return data.reciters;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
+ @override
+  Future<TimeData> getTime() async {
+  try {
+    final response = await remoteDataSource.getTime();
+    final data = ResponseTime.fromJson(
+      response.toString(),
+    );
+    if (data.code == 200 ) {
+      return data.data!;
+    }
+    throw Exception(data.status);
+  } catch (e) {
+    print('getTime error: $e');
+    rethrow;
+  }
+}
+}

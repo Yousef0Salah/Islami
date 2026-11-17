@@ -29,13 +29,18 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animated_to: ^0.9.0
+  audioplayers: ^6.7.1
+  bloc: ^9.2.1
   carousel_slider: ^5.1.2
   cupertino_icons: ^1.0.8
+  dio: ^5.11.1
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_svg: ^2.3.0
   google_fonts: ^8.2.1
   shared_preferences: ^2.5.5
+  skeletonizer: ^3.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

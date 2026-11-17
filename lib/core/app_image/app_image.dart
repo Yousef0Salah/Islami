@@ -4,14 +4,19 @@ abstract class AppImage {
   static const String hadethBg = 'assets/images/hadeth_bg.png';
   static const String hadithCardBg = 'assets/images/HadithCardBackGround.png';
   static const String sebhaBg = 'assets/images/sebha_bg.png';
+  static const String radioBg = 'assets/images/radio_bg.jpg';
+  static const String timeBg = 'assets/images/time_bg.png';
   //-------------image------------------
   static const String ayaNumber = 'assets/images/aya_number.png';
   static const String rightCorner = 'assets/images/img_right_corner.png';
   static const String leftCorner = 'assets/images/img_left_corner.png';
   static const String mosque = 'assets/images/Mosque-02.png';
+  static const String soundWave = 'assets/images/soundWave.png';
   static const String sebhaBody = 'assets/images/SebhaBody.png';
   static const String sebhaHead = 'assets/images/SebhaHead.png';
-
+  static const String timeRect = 'assets/images/time_rect.png';
+  static const String eveningAzkar = 'assets/images/evening_azkar.png';
+  static const String morningAzkar = 'assets/images/morning_azkar.png';
   //-------------image intro----------------
   static const String introBearish = 'assets/images/intro_bearish.png';
   static const String introIslami = 'assets/images/intro_islami.png';
