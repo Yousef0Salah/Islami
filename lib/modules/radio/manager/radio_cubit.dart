@@ -1,27 +1,43 @@
 import 'package:bloc/bloc.dart';
-import 'package:islami/modules/layout/data/model/radio_model.dart';
+import 'package:flutter/widgets.dart';
+import 'package:islami/modules/data/model/radio_model.dart';
 import 'package:islami/core/service/play_sound.dart';
-import 'package:islami/modules/layout/data/model/reciters_model.dart';
-import 'package:islami/modules/layout/data/model/time_model.dart';
-import 'package:islami/modules/layout/data/repo/repo.dart';
-import 'package:islami/modules/layout/manager/radio_state.dart';
+import 'package:islami/modules/data/model/reciters_model.dart';
+import 'package:islami/modules/data/model/time_model.dart';
+import 'package:islami/modules/data/repo/repo.dart';
+import 'package:islami/modules/radio/manager/radio_state.dart';
 
 class RadioCubit extends Cubit<RadioState> {
   RadioCubit() : super(RadioInitialState());
 
   Repo repo = RepoImp();
 
+  bool isRadio = true;
+
+  void changeTab(bool value) {
+    if (isRadio == value) return;
+
+    isRadio = value;
+
+    if (isRadio) {
+      getRadio();
+    } else {
+      getReciter();
+    }
+  }
+
   //====================[ Reciter ]==============================
 
-  int suraindex = 001;
+  int suraIndex = 001;
   List<ReciterModel> reciterList = [];
 
-  void getReciter() async {
+  Future<void> getReciter() async {
+    if (reciterList.isNotEmpty) {
+      emit(RecitersSuccessState());
+      return;
+    }
     emit(RecitersLoadingState());
     try {
-      if (reciterList.isNotEmpty) {
-        return;
-      }
       reciterList = await repo.getReciter();
       emit(RecitersSuccessState());
     } catch (e) {
@@ -30,26 +46,27 @@ class RadioCubit extends Cubit<RadioState> {
   }
 
   void skipNext() {
-    if (suraindex < 114) {
-      suraindex++;
+    if (suraIndex < 114) {
+      suraIndex++;
     }
   }
 
   void skipPrevious() {
-    if (suraindex > 1) {
-      suraindex--;
+    if (suraIndex > 1) {
+      suraIndex--;
     }
   }
 
   //====================[ Radio ]==============================
   List<RadioModel> radioList = [];
 
-  void getRadio() async {
+  Future<void> getRadio() async {
+    if (radioList.isNotEmpty) {
+      emit(RadioSuccessState());
+      return;
+    }
     emit(RadioLoadingState());
     try {
-      if (radioList.isNotEmpty) {
-        return;
-      }
       radioList = await repo.getRadio();
       emit(RadioSuccessState());
     } catch (e) {
@@ -57,7 +74,7 @@ class RadioCubit extends Cubit<RadioState> {
     }
   }
 
-  //---------------------------------
+  //=====================play sound==========
 
   final PlaySound playSound = PlaySound();
 
@@ -72,45 +89,49 @@ class RadioCubit extends Cubit<RadioState> {
         return;
       }
 
-      currentRadioUrl = url;
-
       await playSound.playSound(url);
-
+      currentRadioUrl = url;
       isPlaying = true;
-
-      emit(RadioPlayerState(isPlaying: true, currentRadioUrl: currentRadioUrl));
+      _emitPlayerState();
     } catch (e) {
-      print(e);
+      debugPrint('Play Radio Error: $e');
     }
   }
 
   Future<void> pauseRadio() async {
-    await playSound.pauseSound();
+    try {
+      await playSound.pauseSound();
 
-    isPlaying = false;
+      isPlaying = false;
 
-    emit(RadioPlayerState(isPlaying: false, currentRadioUrl: currentRadioUrl));
+      _emitPlayerState();
+    } catch (e) {
+      debugPrint('Pause Radio Error: $e');
+    }
   }
 
   Future<void> mute() async {
+    if (isMute) return;
     await playSound.mute();
 
     isMute = true;
 
-    emit(
-      RadioPlayerState(isPlaying: isPlaying, currentRadioUrl: currentRadioUrl),
-    );
+    _emitPlayerState();
   }
 
   Future<void> unmute() async {
+    if (!isMute) return;
     await playSound.unMute();
 
     isMute = false;
 
+    _emitPlayerState();
+  }
+
+  //-----------------play state---------------
+  void _emitPlayerState() {
     emit(
       RadioPlayerState(isPlaying: isPlaying, currentRadioUrl: currentRadioUrl),
     );
   }
-
- 
 }

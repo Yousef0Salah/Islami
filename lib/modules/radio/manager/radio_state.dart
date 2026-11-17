@@ -28,3 +28,4 @@ class RecitersErrorState extends RadioState {
   RecitersErrorState(this.message);
 }
 
+class RadioTabChangedState extends RadioState{}

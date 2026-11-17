@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:islami/core/app_image/app_image.dart';
 import 'package:islami/core/theme/app_colors.dart';
 import 'package:islami/core/theme/app_text.dart';
-import 'package:islami/modules/layout/screens/hadeth_screen.dart';
+import 'package:islami/modules/hadeth/view/hadeth_screen.dart';
 
 class HadethDetailsPage extends StatelessWidget {
   const HadethDetailsPage({super.key, required this.hadeth});

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:islami/core/app_image/app_image.dart';
+import 'package:islami/modules/data/model/radio_model.dart';
 import 'package:islami/core/theme/app_colors.dart';
-import 'package:islami/modules/layout/data/model/reciters_model.dart';
-import 'package:islami/modules/layout/manager/radio_cubit.dart';
-import 'package:islami/modules/layout/manager/radio_state.dart';
+import 'package:islami/modules/radio/manager/radio_cubit.dart';
+import 'package:islami/modules/radio/manager/radio_state.dart';
 
-class ReciteCard extends StatelessWidget {
-  const ReciteCard({super.key, required this.radioInfo});
-  final ReciterModel radioInfo;
+class RadioCard extends StatelessWidget {
+  const RadioCard({super.key, required this.radioInfo});
+  final RadioModel radioInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +23,10 @@ class ReciteCard extends StatelessWidget {
       ),
       child: BlocBuilder<RadioCubit, RadioState>(
         builder: (context, state) {
-          
-          final isCurrentRadio =
-              cubit.currentRadioUrl ==
-              '${radioInfo.moshaf[0].server}${cubit.suraindex}.mp3';
+          final isCurrentRadio = cubit.currentRadioUrl == radioInfo.url;
 
           final isPlaying = isCurrentRadio && cubit.isPlaying;
+          final ismute = isCurrentRadio && cubit.isMute;
           return Stack(
             alignment: .center,
             children: [
@@ -37,7 +35,11 @@ class ReciteCard extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: isPlaying
-                    ? Image.asset(AppImage.soundWave, color: AppColors.gray)
+                    ? Image.asset(
+                        AppImage.soundWave,
+                        color: AppColors.gray,
+                       
+                      )
                     : Image.asset(AppImage.mosque),
               ),
               Column(
@@ -50,20 +52,10 @@ class ReciteCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: .center,
                     children: [
+                      const SizedBox(width: 50),
                       InkWell(
                         onTap: () {
-                          cubit.skipPrevious();
-                          cubit.playRadio(
-                            '${radioInfo.moshaf[0].server}${cubit.suraindex}.mp3',
-                          );
-                        },
-                        child: Icon(Icons.skip_previous_rounded, size: 32),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          cubit.playRadio(
-                            '${radioInfo.moshaf[0].server}${cubit.suraindex}.mp3',
-                          );
+                          cubit.playRadio(radioInfo.url);
                         },
                         child: Icon(
                           isPlaying
@@ -73,16 +65,21 @@ class ReciteCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                       InkWell(
-                          onTap: () {
-                            cubit.skipNext();
-                            cubit.playRadio(
-                              '${radioInfo.moshaf[0].server}${cubit.suraindex}.mp3',
-                            );
-                          },
-                          child: Icon(Icons.skip_next_rounded, size: 32),
+                      InkWell(
+                        onTap: () {
+                          if (cubit.isMute) {
+                            cubit.unmute();
+                          } else {
+                            cubit.mute();
+                          }
+                        },
+                        child: Icon(
+                          ismute
+                              ? Icons.volume_off_rounded
+                              : Icons.volume_up_rounded,
+                          size: 32,
                         ),
-                      
+                      ),
                     ],
                   ),
                 ],

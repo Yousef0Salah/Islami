@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:islami/modules/layout/data/model/radio_model.dart';
-import 'package:islami/modules/layout/data/data_source/remote_data_source.dart';
-import 'package:islami/modules/layout/data/model/reciters_model.dart';
-import 'package:islami/modules/layout/data/model/time_model.dart';
+import 'package:islami/modules/data/model/radio_model.dart';
+import 'package:islami/modules/data/data_source/remote_data_source.dart';
+import 'package:islami/modules/data/model/reciters_model.dart';
+import 'package:islami/modules/data/model/time_model.dart';
 
 abstract class Repo {
   Future<List<RadioModel>> getRadio();
