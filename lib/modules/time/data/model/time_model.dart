@@ -133,14 +133,20 @@ class Timings with JsonModel {
   static ({String time, String period}) to12h(String raw) {
     final clean = raw.replaceAll(RegExp(r'\s*\(.*\)'), '').trim();
     final parts = clean.split(':');
-    if (parts.length != 2) {
-      return (time: raw, period: '');
-    }
-    final h24 = int.tryParse(parts[0]) ?? 0;
-    final m = parts[1].padLeft(2, '0');
+    if (parts.length != 2) return (time: raw, period: '');
+
+    final h24 = int.tryParse(parts[0]);
+    final m = int.tryParse(parts[1]);
+
+    // لو مش أرقام، ارجع القيمة الأصلية
+    if (h24 == null || m == null) return (time: raw, period: '');
+
     final period = h24 >= 12 ? 'PM' : 'AM';
     final h12 = (h24 % 12 == 0) ? 12 : h24 % 12;
-    return (time: '${h12.toString().padLeft(2, '0')}:$m', period: period);
+    return (
+      time: '${h12.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}',
+      period: period,
+    );
   }
 }
 
@@ -575,13 +581,24 @@ class AllSalah {
   final String name;
   final String time;
   final String pmAm;
+  final String rawTime;
 
-  const AllSalah({required this.name, required this.time, required this.pmAm});
+  const AllSalah({
+    required this.name,
+    required this.time,
+    required this.pmAm,
+    required this.rawTime,
+  });
 
   static List<AllSalah> getAllSalah(Map<String, String> salah) {
     return salah.entries.map((e) {
       final t = Timings.to12h(e.value);
-      return AllSalah(name: e.key, time: t.time, pmAm: t.period);
+      return AllSalah(
+        name: e.key,
+        time: t.time,
+        pmAm: t.period,
+        rawTime: e.value,
+      );
     }).toList();
   }
 }

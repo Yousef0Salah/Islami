@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:islami/modules/data/model/radio_model.dart';
 import 'package:islami/modules/data/data_source/remote_data_source.dart';
 import 'package:islami/modules/data/model/reciters_model.dart';
-import 'package:islami/modules/data/model/time_model.dart';
+import 'package:islami/modules/time/data/model/time_model.dart';
 
 abstract class Repo {
   Future<List<RadioModel>> getRadio();
 
   Future<List<ReciterModel>> getReciter();
 
-  Future<TimeData> getTime();
+  Future<TimeData> getTime(String timeNow);
 }
 
 class RepoImp implements Repo {
@@ -40,9 +40,9 @@ class RepoImp implements Repo {
   }
 
  @override
-  Future<TimeData> getTime() async {
+  Future<TimeData> getTime( String timeNow) async {
   try {
-    final response = await remoteDataSource.getTime();
+    final response = await remoteDataSource.getTime(timeNow);
     final data = ResponseTime.fromJson(
       response.toString(),
     );

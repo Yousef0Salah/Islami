@@ -4,13 +4,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:islami/core/app_image/app_image.dart';
 import 'package:islami/core/theme/app_colors.dart';
 import 'package:islami/core/theme/app_text.dart';
+import 'package:islami/modules/time/data/model/azkar_model.dart';
+import 'package:islami/modules/time/data/services/get_azkar.dart';
 import 'package:islami/modules/time/manager/time_cubit.dart';
 import 'package:islami/modules/time/manager/time_state.dart';
+import 'package:islami/modules/time/view/azkar_screen.dart';
 import 'package:islami/modules/time/widget/azkar_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class TimeView extends StatelessWidget {
+class TimeView extends StatefulWidget {
   const TimeView({super.key});
+
+  @override
+  State<TimeView> createState() => _TimeViewState();
+}
+
+class _TimeViewState extends State<TimeView> {
+  late Future<AzkarModel> azkarFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    azkarFuture = getAzkar();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +66,6 @@ class TimeView extends StatelessWidget {
                     child: BlocBuilder<TimeCubit, TimeState>(
                       builder: (context, state) {
                         final cubit = context.read<TimeCubit>();
-
                         if (state is TimeErrorState) {
                           return Center(
                             child: Text(state.message, style: AppText.s18wB),
@@ -58,9 +73,7 @@ class TimeView extends StatelessWidget {
                         }
 
                         final isLoading = state is TimeLoadingState;
-                        final data = state is TimeSuccessState
-                            ? cubit.allData
-                            : null;
+                        final data = state is TimeLoadingState ? null :  cubit.allData ;
 
                         return Skeletonizer(
                           enabled: isLoading,
@@ -147,7 +160,8 @@ class TimeView extends StatelessWidget {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(
-                                            prayer?.name ?? 'Fajr',
+                                            data?.listSalah[index].name ??
+                                                'Fajr',
                                             style: AppText.s16wB.copyWith(
                                               color: Colors.white,
                                             ),
@@ -177,16 +191,22 @@ class TimeView extends StatelessWidget {
                                 ),
                               ),
 
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                    'Next Pray - 02:32',
-                                    style: AppText.s16wB,
-                                  ),
-                                  const Icon(Icons.volume_up_rounded),
-                                ],
+                              BlocBuilder<TimeCubit, TimeState>(
+                                builder: (context, state) {
+                                  final cubit = context.read<TimeCubit>();
+
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        'Next Pray - ${cubit.remainingTime}',
+                                        style: AppText.s16wB,
+                                      ),
+                                      const Icon(Icons.volume_up_rounded),
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -209,12 +229,18 @@ class TimeView extends StatelessWidget {
                 Row(
                   children: [
                     AzkarCard(
+                      onTap: () async {
+                        openAzkar(false);
+                      },
                       title: 'Evening Azkar',
                       image: AppImage.eveningAzkar,
                     ),
 
                     const SizedBox(width: 12),
                     AzkarCard(
+                      onTap: () async {
+                        openAzkar(true);
+                      },
                       title: 'Morning Azkar',
                       image: AppImage.morningAzkar,
                     ),
@@ -223,6 +249,21 @@ class TimeView extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> openAzkar(bool isMorning) async {
+    final azkarModel = await azkarFuture;
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AzkarScreen(
+          zekrs: isMorning ? azkarModel.morningAzkar : azkarModel.eveningAzkar,
         ),
       ),
     );

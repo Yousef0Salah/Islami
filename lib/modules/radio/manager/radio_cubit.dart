@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:islami/modules/data/model/radio_model.dart';
 import 'package:islami/core/service/play_sound.dart';
 import 'package:islami/modules/data/model/reciters_model.dart';
-import 'package:islami/modules/data/model/time_model.dart';
+import 'package:islami/modules/time/data/model/time_model.dart';
 import 'package:islami/modules/data/repo/repo.dart';
 import 'package:islami/modules/radio/manager/radio_state.dart';
 

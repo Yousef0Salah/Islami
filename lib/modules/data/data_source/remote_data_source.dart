@@ -6,7 +6,7 @@ abstract class RemoteDataSource {
 
   Future<Response<dynamic>> getReciters();
 
-  Future<Response<dynamic>> getTime();
+  Future<Response<dynamic>> getTime(String date);
 }
 
 class RemoteDataSourceImp implements RemoteDataSource {
@@ -21,9 +21,9 @@ class RemoteDataSourceImp implements RemoteDataSource {
   }
 
   @override
-  Future<Response<dynamic>> getTime() {
+  Future<Response<dynamic>> getTime(String date) {
     return Dio(
       BaseOptions(baseUrl: 'https://api.aladhan.com/v1/timingsByCity/'),
-    ).get('15-11-2026?city=cairo&country=egypt');
+    ).get('$date?city=cairo&country=egypt');
   }
 }
